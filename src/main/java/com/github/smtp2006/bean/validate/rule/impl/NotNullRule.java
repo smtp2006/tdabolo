@@ -1,12 +1,12 @@
 /**
- * http://github.com/smtp2006 
+ * http://github.com/smtp2006 /tdabolo.git
  */
 package com.github.smtp2006.bean.validate.rule.impl;
 
 import com.github.smtp2006.bean.validate.rule.Rule;
 
 /**
- * Value不能为空
+ * Value不能为空.
  * 
  * @author wanghua
  * @version 2013-4-21 下午10:21:22

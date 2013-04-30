@@ -90,9 +90,10 @@ public class ClassValidatorTest {
          Assert.assertNull(failures);
          result_Post(failures);
         
-         System.out.println(ClassValidatorFactory.validate(user));
+         System.out.println(new ClassValidators().validate(user));
          System.out.println("logger".matches("^logger$"));
          System.out.println("DEFAULT_NAME".matches("^(logger)?[A-Z_0-9]*$"));
+         System.out.println("a.b.c".replaceAll("\\.", "/"));
     }
 
     private ClassValidator<User> init_ClassValidator() {

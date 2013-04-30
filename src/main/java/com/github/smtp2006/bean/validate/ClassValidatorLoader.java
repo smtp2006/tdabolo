@@ -29,22 +29,23 @@ class ClassValidatorLoader {
      */
     private static final Logger logger = LoggerFactory.getLogger(ClassValidatorLoader.class);
     /**
-     * Java Bean Class扩展名.
+     * Class文件扩展名.
      */
-    public static final String CLASS_VALIDATOR_EXT = ".xml";
+    public static final String SUFFIX = ".xml";
 
     /**
      * @param klass 要加载的Class
      * @return 加载Class.xml为Map，key=ClassValidator#name, value=ClassValidator.
      * @throws Exception Digester解析异常
      */
-    public synchronized Map<String, ClassValidator<?>> loadClassValidator(Class<?> klass) throws Exception {
+    public Map<String, ClassValidator<?>> loadClassValidator(Class<?> klass) throws Exception {
+        // klass不能为空
         if (klass == null) {
             throw new IllegalArgumentException("klass must not be null");
         }
         Map<String, ClassValidator<?>> ret = null;
         // get resouces from classpath
-        String fileName = klass.getName().replace(".", "/") + CLASS_VALIDATOR_EXT;
+        String fileName = klass.getName().replace(".", "/") + SUFFIX;
         logger.debug("loadClassValidator from file:{}", fileName);
         Enumeration<URL> resources = ClassValidatorLoader.class.getClassLoader().getResources(fileName);
         if (resources != null && resources.hasMoreElements()) {
@@ -53,22 +54,22 @@ class ClassValidatorLoader {
                 URL url = resources.nextElement();
                 // load resouce
                 Map<String, ClassValidator<?>> urlMap = loadFromUrl(url);
-                if (urlMap != null && !urlMap.isEmpty()) {
-                    for (Map.Entry<String, ClassValidator<?>> entry : urlMap.entrySet()) {
-                        String classValidatorKey = klass.getName() + "#" + entry.getKey();
-                        if (ret.containsKey(classValidatorKey)) {
-                            throw new RuntimeException("has duplicate namespace `" + classValidatorKey
-                                    + "`, please check classpath");
-                        }
-                        ret.put(classValidatorKey, entry.getValue());
+                if(urlMap == null || urlMap.isEmpty()) {
+                    throw new RuntimeException(url + " should contain any ClassValidator, please check");
+                }
+                
+                for (Map.Entry<String, ClassValidator<?>> entry : urlMap.entrySet()) {
+                    String classValidatorKey = klass.getName() + "#" + entry.getKey();
+                    if (ret.containsKey(classValidatorKey)) {
+                        throw new RuntimeException("has duplicate namespace `" + classValidatorKey + "`, please check classpath");
                     }
+                    ret.put(classValidatorKey, entry.getValue());
                 }
             }
+        } else {
+            throw new RuntimeException("there is 0 " + klass.getName() + SUFFIX + " in the classpath, please check");
         }
-        if (ret == null) {
-            throw new RuntimeException("there is 0 " + klass.getName() + CLASS_VALIDATOR_EXT
-                    + " in the classpath, please check");
-        }
+        
         return ret;
     }
     /**
