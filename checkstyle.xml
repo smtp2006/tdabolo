@@ -124,7 +124,11 @@
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
 		<module name="LineLength">
 			<!-- @ -->
+<<<<<<< HEAD
 			<property name="max" value="256" />
+=======
+			<property name="max" value="120" />
+>>>>>>> branch 'master' of https://github.com/smtp2006/tdabolo.git
 		</module>
 		<module name="MethodLength" />
 		<module name="ParameterNumber" />

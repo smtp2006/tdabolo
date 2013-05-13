@@ -69,7 +69,6 @@ class ClassValidatorLoader {
         } else {
             throw new RuntimeException("there is 0 " + klass.getName() + SUFFIX + " in the classpath, please check");
         }
-        
         return ret;
     }
     /**
